@@ -80,9 +80,9 @@ bool ldf_eof=false;
 while(!ldf_eof){
 
 
-	if(type%10==8||type%10==7){
-	cout << "EOF=TRUE";	
-	ldf_eof=true;
+	if(type%10==8){
+	   cout
+		ldf_eof=true;
 	}
 	else if(type%10==2){
 		get->readOneWord();
