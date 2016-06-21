@@ -17,7 +17,7 @@ LDFDataReader::~LDFDataReader(){
 Int_t LDFDataReader::openFile(const char *filename){
 
   ldf_data_file = new ifstream(filename, ios::binary);
-  
+record_address = ldf_data_file->tellg();  
   if(ldf_data_file->is_open()){
     cout << "Opened file " << filename << endl;
     return 0;
@@ -26,6 +26,7 @@ Int_t LDFDataReader::openFile(const char *filename){
     cout << "File " << filename << " could not be opened." << endl;
     return -1;
   }
+
 }
 Int_t LDFDataReader::setToNextRecord(){
 	//Sets record_address, used for debugging
@@ -170,22 +171,23 @@ Int_t LDFDataReader::readDataEvent(){
 
 Int_t LDFDataReader::readOneWord(){
 	//Reads one word and returns that words id
-	Int_t wordID=0;
+	Int_t recordID=0;
 	UInt_t temp_word=0;
 	ldf_data_file->read((char *)&temp_word, 4);
-	wordID=
+	recordID=
 		1*(int)(temp_word==PAD)+2*(int)(temp_word==DATA)+3*(int)(temp_word==DIR)+
 		4*(int)(temp_word==HEAD)+5*(int)(temp_word==SCAL)+6*(int)(temp_word==DEAD)+
 		7*(int)(temp_word==EF)+8*(int)ldf_data_file->eof();
 	
-	return wordID;
+	return recordID;
 
 	}
 
 
 bool LDFDataReader::toNextRecord(){
 	//Goes to next record in file, sets memory address to record after
-	ldf_data_file->seekg(record_address);
-	record_address+=4*8194;
-	return record_address; 
+	int current=ldf_data_file->tellg();
+	ldf_data_file->seekg(record_address+((current-record_address)/(4*8194)+1)*4*8194);
+
+	return true; 
 }

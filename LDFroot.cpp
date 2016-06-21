@@ -58,62 +58,56 @@ TFile *fOutScal  = new TFile(argv[2], "RECREATE");
 
   //---------Make branches------------
 
-get->openFile(argv[1]);
+
 /*  if(IsOpen == -1){
     exit(1);
   }*/
 
     
-  tneufScal->Branch("scal", get->scal, "Scal[8]/i");
+//  tneufScal->Branch("scal", get->scal, "Scal[8]/i");
 
 
 
 
 
 
-int type=0;
+int recordID=0;
 //type=get->readOneWord();
 bool ldf_eof=false;
 // event loop
 
 
-while(!ldf_eof){
+while(recordID%10!=8&&recordID%10!=7){
 
-
-	if(type%10==8||type%10==7){
-	cout << "EOF=TRUE";	
-	ldf_eof=true;
-	}
-	else if(type%10==2){
-		get->readOneWord();
-		bool next_event=true;
-		int eventid;
-		while(next_event){
-			eventid=get->readDataEvent();
-			if(eventid/10>0){
+//	if(recordID%10==2){
+//		get->readOneWord();
+//		bool next_event=true;
+	
+//		while(recordID==1||recordID==0||recordID==9){
+//			recordID=get->readDataEvent();
+//			if(recordID/10>0){
 				
-				tneuf->Fill();
-			}
-			next_event=(eventid%10==1);
-			if(!next_event){
-				type=eventid;
-				}
+//				tneuf->Fill();
+//			}
+//			next_event=(recordID%10==1);
+			
 
-			}
-	}
-	else if(type%10==5){
+//			}
+//	}
+	//else if(type%10==5){
 	
-	get->readScalarEvent();
-	get->parseScalars();
-		}
-	else if((type%10>2)&&(type%10<8)){
+	//get->readScalarEvent();
+	//get->parseScalars();
+	//	}
+	else if((recordID%10>1)&&(recordID%10<8)){
 	
-	type=get->readOneWord();	
+	get->toNextRecord();
+	recordID=get->readOneWord();	
 	}
 	
 	else{
 
-	type=get->readOneWord();
+	recordID=get->readOneWord();
 		
 	}
 	
