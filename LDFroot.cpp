@@ -75,37 +75,38 @@ int recordID=0;
 //type=get->readOneWord();
 bool ldf_eof=false;
 // event loop
-
+std::vector<int> v;
 
 while(recordID%10!=8&&recordID%10!=7){
 
-//	if(recordID%10==2){
-//		get->readOneWord();
-//		bool next_event=true;
+	if(recordID%10==2){
+		get->readOneWord();
+		bool next_event=true;
 	
-//		while(recordID==1||recordID==0||recordID==9){
-//			recordID=get->readDataEvent();
-//			if(recordID/10>0){
+		while(recordID==1||recordID==0||recordID==9){
+			recordID=get->readDataEvent();
+			if(recordID/10>0){
 				
-//				tneuf->Fill();
-//			}
-//			next_event=(recordID%10==1);
+				tneuf->Fill();
+			}
+			next_event=(recordID%10==1);
 			
 
-//			}
-//	}
+			}
+	}
 	//else if(type%10==5){
 	
 	//get->readScalarEvent();
 	//get->parseScalars();
 	//	}
-	else if((recordID%10>1)&&(recordID%10<8)){
-	
+ if((recordID%10>1)&&(recordID%10<8)){
+	v.push_back(recordID);	
 	get->toNextRecord();
 	recordID=get->readOneWord();	
 	}
 	
 	else{
+
 
 	recordID=get->readOneWord();
 		
